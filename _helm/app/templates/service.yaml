@@ -11,9 +11,8 @@ metadata:
 spec:
   ports:
   - port: 5858
-    nodePort: 32123
     protocol: TCP
     targetPort: 5858
   selector:
     app: grafana-dashboard-gateway
-  type: NodePort
+  type: ClusterIP

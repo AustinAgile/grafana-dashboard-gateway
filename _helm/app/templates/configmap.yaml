@@ -1,14 +1,13 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  namespace: {{ .Values.global.namespace }}
   name: grafana-dashboard-gateway
+  namespace: {{ .Values.global.namespace }}
   annotations:
     Release.Name: {{ .Release.Name }}
     Release.Revision: "{{ .Release.Revision }}"
     Chart.Name: {{ .Chart.Name }}
     Chart.Version: {{ .Chart.Version }}
-    grafana.source: "dashboard"
+    grafana-dashboard-gateway/source: "dashboard"
 data:
-  db: |
-    {"abc": "123"}
+  {{ (.Files.Glob "dashboards/Mock_PBR2.json").AsConfig }}

@@ -2,8 +2,8 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  namespace: {{ .Values.global.namespace }}
   name: grafana-dashboard-gateway
+  namespace: {{ .Values.global.namespace }}
   labels:
     app: grafana-dashboard-gateway
   annotations:
@@ -33,10 +33,10 @@ spec:
       labels:
         app: grafana-dashboard-gateway
     spec:
-      serviceAccountName: grafana-dashboard-gateway-acc
+      serviceAccountName: grafana-dashboard-gateway
       containers:
       - name: grafana-dashboard-gateway
-        image: grafana-dashboard-gateway:v0.1.6
+        image: grafana-dashboard-gateway:v0.1.10
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5858

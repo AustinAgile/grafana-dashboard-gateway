@@ -1,2 +1,4 @@
 global:
-  namespace: default
+  namespace: monitoring2
+  ingress:
+    domain_name: kubernetes.local

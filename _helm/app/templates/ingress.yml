@@ -12,9 +12,9 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   rules:
-  - host: grafana-dashboard-gateway.minikube.local
+  - host: grafana-dashboard-gateway.{{ .Values.global.namespace }}.{{ .Values.global.ingress.domain_name }}
     http:
       paths:
       - backend:
-          serviceName: prometheus
+          serviceName: grafana-dashboard-gateway
           servicePort: 5858
