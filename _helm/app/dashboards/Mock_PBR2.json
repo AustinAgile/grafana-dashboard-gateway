@@ -46,7 +46,7 @@
 	"gnetId": null,
 	"graphTooltip": 0,
 	"id": null,
-	"iteration": 1533593621785,
+	"iteration": 1533596338660,
 	"links": [],
 	"panels": [
 		{
@@ -167,13 +167,13 @@
 					"text": "Prometheus3",
 					"value": "Prometheus3"
 				},
-				"hide": 0,
+				"hide": 2,
 				"label": null,
 				"name": "DS_PROMETHEUS3",
 				"options": [],
 				"query": "prometheus",
 				"refresh": 1,
-				"regex": "/Prom.*/",
+				"regex": "/Prometheus3/",
 				"type": "datasource"
 			}
 		]
@@ -208,7 +208,7 @@
 		]
 	},
 	"timezone": "",
-	"title": "Mock PBR5",
-	"uid": "5fPZJR5mz",
-	"version": 9
+	"title": "Mock PBR 4",
+	"uid": "NHtHpKcik",
+	"version": 12
 }
