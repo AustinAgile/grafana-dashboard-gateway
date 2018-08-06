@@ -1,0 +1,53 @@
+# Deployment
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  namespace: {{ .Values.global.namespace }}
+  name: grafana-dashboard-gateway
+  labels:
+    app: grafana-dashboard-gateway
+  annotations:
+    Release.Name: {{ .Release.Name }}
+    Release.Revision: "{{ .Release.Revision }}"
+    Chart.Name: {{ .Chart.Name }}
+    Chart.Version: {{ .Chart.Version }}
+    deployment.kubernetes.io/revision: "1"
+  generation: 1
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: grafana-dashboard-gateway
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      name: grafana-dashboard-gateway
+      annotations:
+        Release.Name: {{ .Release.Name }}
+        Chart.Name: {{ .Chart.Name }}
+      labels:
+        app: grafana-dashboard-gateway
+    spec:
+      serviceAccountName: grafana-dashboard-gateway-acc
+      containers:
+      - name: grafana-dashboard-gateway
+        image: grafana-dashboard-gateway:v0.1.6
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5858
+        securityContext:
+          privileged: false
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - name: code
+          mountPath: /usr/src
+      volumes:
+      - name: code
+        hostPath:
+          path: /development/github/kubernetes/grafana-dashboard-gateway/_docker/code

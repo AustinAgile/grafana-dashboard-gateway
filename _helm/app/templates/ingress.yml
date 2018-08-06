@@ -1,0 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: grafana-dashboard-gateway
+  namespace: {{ .Values.global.namespace }}
+  annotations:
+    Release.Name: {{ .Release.Name }}
+    Release.Revision: "{{ .Release.Revision }}"
+    Chart.Name: {{ .Chart.Name }}
+    Chart.Version: {{ .Chart.Version }}
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - host: grafana-dashboard-gateway.minikube.local
+    http:
+      paths:
+      - backend:
+          serviceName: prometheus
+          servicePort: 5858

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: {{ .Values.global.namespace }}
+  name: grafana-dashboard-gateway
+  annotations:
+    Release.Name: {{ .Release.Name }}
+    Release.Revision: "{{ .Release.Revision }}"
+    Chart.Name: {{ .Chart.Name }}
+    Chart.Version: {{ .Chart.Version }}
+    grafana.source: "dashboard"
+data:
+  db: |
+    {"abc": "123"}

@@ -1,0 +1,53 @@
+from aiohttp import web
+from kubernetes import client, config, watch
+import json
+import os
+import sys
+import requests
+from requests.packages.urllib3.util.retry import Retry
+from requests.adapters import HTTPAdapter
+
+async def handle(request):
+    name = request.match_info.get('name', "World!")
+    text = "Hi, and Hello, " + name
+    print('received request, replying with "{}".'.format(text))
+    return web.Response(text=text)
+
+def watchForChanges():
+    annotation = "grafana.source"
+    print(f'watching')
+    v1 = client.CoreV1Api()
+    w = watch.Watch()
+    stream = w.stream(v1.list_config_map_for_all_namespaces)
+    for event in stream:
+        metadata = event['object'].metadata
+        if metadata.annotations is None:
+            continue
+        if annotation not in metadata.annotations:
+            continue
+        if metadata.annotations[annotation] != "dashboard":
+            continue
+
+        eventType = event['type']
+        dataMap=event['object'].data
+        if dataMap is None:
+            print("Configmap %s/%s dashboard is %s, with no data" % (metadata.namespace, metadata.name, eventType))
+            continue
+        print("Configmap %s/%s dashboard is %s" % (metadata.namespace, metadata.name, eventType))
+        for item in dataMap.keys():
+            print("Dashboard %s" % item)
+            dashboard = json.loads(dataMap[item])
+            print(dashboard)
+
+app = web.Application()
+app.router.add_get('/', handle)
+app.router.add_get('/{name}', handle)
+
+config.load_incluster_config()
+print("Config for cluster api loaded...")
+print('calling watch')
+watchForChanges()
+
+print('calling web')
+#web.run_app(app, port=5858)
+
