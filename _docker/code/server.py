@@ -56,9 +56,10 @@ def update(dashboard):
 	r.mount('https://', HTTPAdapter(max_retries=retries))
 	print("xxx update")
 #	print(dashboard)
-	print(json.dumps(dashboard))
-	if "dashboard" in dashboard:
+#	print(json.dumps(dashboard))
+	if "dashboard" not in dashboard:
 		dashboard = {"dashboard": dashboard, "overwrite": True}
+#look for folder name, get folders from api, get id, and add folderId to dashboard
 #	res = r.post("http://admin:Abc123!!@grafana.monitoring2.svc.cluster.local:3000/api/dashboards/db", json={"dashboard": dashboard, "overwrite": True}, timeout=10)
 	res = r.post("http://admin:Abc123!!@grafana.monitoring2.svc.cluster.local:3000/api/dashboards/db", json=dashboard, timeout=10)
 	print(res.status_code)
