@@ -40,9 +40,10 @@ def watchForChanges():
 			dashboard = json.loads(dataMap[item])
 			dashboardTitle = dashboard["title"]
 			print("Title: %s" % dashboardTitle)
+			update(dashboard)
 #		uid = search(dashboardTitle)
 
-		update(dashboard)
+
 
 
 def update(dashboard):
@@ -56,7 +57,10 @@ def update(dashboard):
 	print("xxx update")
 #	print(dashboard)
 	print(json.dumps(dashboard))
-	res = r.post("http://admin:Abc123!!@grafana.monitoring2.svc.cluster.local:3000/api/dashboards/db", json={"dashboard": dashboard, "overwrite": True}, timeout=10)
+	if "dashboard" in dashboard:
+		dashboard = {"dashboard": dashboard, "overwrite": True}
+#	res = r.post("http://admin:Abc123!!@grafana.monitoring2.svc.cluster.local:3000/api/dashboards/db", json={"dashboard": dashboard, "overwrite": True}, timeout=10)
+	res = r.post("http://admin:Abc123!!@grafana.monitoring2.svc.cluster.local:3000/api/dashboards/db", json=dashboard, timeout=10)
 	print(res.status_code)
 	result = res.json()
 	print ("update result:")
