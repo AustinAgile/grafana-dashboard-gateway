@@ -36,7 +36,7 @@ spec:
       serviceAccountName: grafana-dashboard-gateway
       containers:
       - name: grafana-dashboard-gateway
-        image: grafana-dashboard-gateway:v0.1.10
+        image: {{ .Values.image.repo }}/grafana-dashboard-gateway:{{ .Chart.AppVersion }}
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5858
