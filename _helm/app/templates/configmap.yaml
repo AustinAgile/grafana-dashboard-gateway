@@ -10,4 +10,4 @@ metadata:
     Chart.Version: {{ .Chart.Version }}
     grafana-dashboard-gateway/source: "dashboard"
 data:
-  {{ (.Files.Glob "dashboards/Mock_PBR2.json").AsConfig }}
+  {{ (.Files.Glob "dashboards/Test.json").AsConfig }}
