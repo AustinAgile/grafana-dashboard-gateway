@@ -1,5 +1,5 @@
 global:
-  namespace: monitoring2
+  namespace: monitoring
   ingress:
     domain_name: kubernetes.local
 
