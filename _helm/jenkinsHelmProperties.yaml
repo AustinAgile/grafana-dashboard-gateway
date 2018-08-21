@@ -1,0 +1,3 @@
+chartRepoRelativePath: "condel/app/release"
+onlyUploadOnMasterRelease: true
+force: true
