@@ -5,7 +5,7 @@ metadata:
   namespace: {{ .Values.global.namespace }}
   annotations: {{ include "global.annotations.standard" . | indent 4 }}
 data:
-  grafana-service-name: matr-grafana
+  grafana-service-name: {{ include "grafana.name" . }}
   namespace: {{ .Values.global.namespace }}
 ---
 apiVersion: v1
