@@ -2,15 +2,11 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: grafana-dashboard-gateway
+  name: {{ include "grafana-dashboard-gateway.name" . }}
   namespace: {{ .Values.global.namespace }}
   labels:
     app: grafana-dashboard-gateway
-  annotations:
-    Release.Name: {{ .Release.Name }}
-    Release.Revision: "{{ .Release.Revision }}"
-    Chart.Name: {{ .Chart.Name }}
-    Chart.Version: {{ .Chart.Version }}
+  annotations: {{ include "global.annotations.standard" . | indent 4 }}
     deployment.kubernetes.io/revision: "1"
   generation: 1
 spec:
@@ -33,7 +29,7 @@ spec:
       labels:
         app: grafana-dashboard-gateway
     spec:
-      serviceAccountName: grafana-dashboard-gateway
+      serviceAccountName: {{ include "grafana-dashboard-gateway.name" . }}
       containers:
       - name: grafana-dashboard-gateway
         image: {{ .Values.image.repo }}/grafana-dashboard-gateway:{{ .Chart.AppVersion }}
@@ -45,9 +41,16 @@ spec:
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
         volumeMounts:
+        - name: config
+          mountPath: /etc/config/{{ include "grafana-dashboard-gateway.name" . }}
+        {{ if .Values.dev.code.mount }}
         - name: code
           mountPath: /usr/src
+        {{ end }}
       volumes:
+      - name: config
+        configMap:
+          name: {{ include "grafana-dashboard-gateway.name" . }}
       - name: code
         hostPath:
-          path: /development/github/kubernetes/grafana-dashboard-gateway/_docker/code
+          path: {{ .Values.dev.code.path }}

@@ -1,18 +1,14 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: grafana-dashboard-gateway
+  name: {{ include "grafana-dashboard-gateway.name" . }}
   namespace: {{ .Values.global.namespace }}
-  annotations:
-    Release.Name: {{ .Release.Name }}
-    Release.Revision: "{{ .Release.Revision }}"
-    Chart.Name: {{ .Chart.Name }}
-    Chart.Version: {{ .Chart.Version }}
+  annotations: {{ include "global.annotations.standard" . | indent 4 }}
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   rules:
-  - host: grafana-dashboard-gateway.{{ .Values.global.namespace }}.{{ .Values.global.ingress.domain_name }}
+  - host: grafana-dashboard-gateway.{{ .Values.global.namespace }}
     http:
       paths:
       - backend:

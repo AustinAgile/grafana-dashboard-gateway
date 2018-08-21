@@ -1,0 +1,13 @@
+global:
+  namespace: monitoring
+  ingress:
+    domain_name: kubernetes.local
+
+image:
+  repo:
+    artifacory.mattersight.local:6002
+
+dev:
+  code:
+    mount: true
+    path: /development/github/kubernetes/grafana-dashboard-gateway/_docker/code

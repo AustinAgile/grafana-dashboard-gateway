@@ -1,8 +1,0 @@
-global:
-  namespace: monitoring
-  ingress:
-    domain_name: kubernetes.local
-
-image:
-  repo:
-    artifacory.mattersight.local:6002
