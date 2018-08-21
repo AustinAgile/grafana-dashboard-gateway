@@ -43,6 +43,8 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /etc/config/{{ include "grafana-dashboard-gateway.name" . }}
+        - name: secret
+          mountPath: /etc/secret/{{ include "grafana-dashboard-gateway.name" . }}
         {{ if .Values.dev.code.mount }}
         - name: code
           mountPath: /usr/src
@@ -51,6 +53,9 @@ spec:
       - name: config
         configMap:
           name: {{ include "grafana-dashboard-gateway.name" . }}
+      - name: secret
+        secret:
+          secretName: {{ include "grafana-dashboard-gateway.name" . }}
       - name: code
         hostPath:
           path: {{ .Values.dev.code.path }}

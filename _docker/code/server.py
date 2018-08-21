@@ -68,15 +68,26 @@ def update(dashboard):
 #app.router.add_get('/', handle)
 #app.router.add_get('/{name}', handle)
 
+with open('/etc/secret/grafana-dashboard-gateway/admin-user') as f:
+	user = f.read()
+f.closed
+print ("user: %s" % user)
+
+with open('/etc/secret/grafana-dashboard-gateway/admin-password') as f:
+	pw = f.read()
+f.closed
+
 with open('/etc/config/grafana-dashboard-gateway/grafana-service-name') as f:
 	grafanaServiceName = f.read()
 f.closed
 print ("grafana service name: %s" % grafanaServiceName)
+
 with open('/etc/config/grafana-dashboard-gateway/namespace') as f:
 	namespace = f.read()
 f.closed
 print ("namespace: %s" % namespace)
-url = "http://admin:Abc123!!@" + grafanaServiceName + "." + namespace + ".svc.cluster.local:3000/api/dashboards/db"
+
+url = "http://"+user+":"+pw+"@" + grafanaServiceName + "." + namespace + ".svc.cluster.local:3000/api/dashboards/db"
 print ("grafana api url: %s" % url)
 
 config.load_incluster_config()
