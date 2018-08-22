@@ -15,22 +15,22 @@ podTemplate(cloud: "${cloud}", label: label, namespace: "${buildNamespace}",
         stage("checkout") {
             checkout scm
         }
-        container("docker") {
-            stage("docker build") {
-                dir("_docker") {
-                    String registry = "artifactory.mattersight.local:6002"
-                    String repoImagePath = "condel"
-                    String repoName = scm.getUserRemoteConfigs()[0].getUrl().tokenize('/').last().split("\\.")[0].toLowerCase()
-                    withCredentials([usernamePassword(credentialsId: "Artifactory", usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                        sh "docker login -u ${'$USERNAME'} -p ${'$PASSWORD'} ${registry}"
-                        sh "docker build --network=host --tag ${registry}/${repoImagePath}${repoName}:${appVersion} ."
-                        sh "docker push ${registry}/${repoImagePath}${repoName}:${appVersion}"
-                        sh "docker tag ${registry}/${repoImagePath}${repoName}:${appVersion} ${registry}/${repoImagePath}${repoName}:latest"
-                        sh "docker push ${registry}/${repoImagePath}${repoName}:latest"
-                    }
-                }
-            }
-        }
+//        container("docker") {
+//            stage("docker build") {
+//                dir("_docker") {
+//                    String registry = "artifactory.mattersight.local:6002"
+//                    String repoImagePath = "condel"
+//                    String repoName = scm.getUserRemoteConfigs()[0].getUrl().tokenize('/').last().split("\\.")[0].toLowerCase()
+//                    withCredentials([usernamePassword(credentialsId: "Artifactory", usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+//                        sh "docker login -u ${'$USERNAME'} -p ${'$PASSWORD'} ${registry}"
+//                        sh "docker build --network=host --tag ${registry}/${repoImagePath}${repoName}:${appVersion} ."
+//                        sh "docker push ${registry}/${repoImagePath}${repoName}:${appVersion}"
+//                        sh "docker tag ${registry}/${repoImagePath}${repoName}:${appVersion} ${registry}/${repoImagePath}${repoName}:latest"
+//                        sh "docker push ${registry}/${repoImagePath}${repoName}:latest"
+//                    }
+//                }
+//            }
+//        }
         container("jnlp") {
             stage("helm build") {
                 withCredentials([file(credentialsId: 'JenkinsEKSUserKubeConfig', variable: 'FILE'), file(credentialsId: 'JenkinsAWSProfileCreds', variable: 'FILE2')]) {
