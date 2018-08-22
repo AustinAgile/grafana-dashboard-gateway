@@ -1,7 +1,7 @@
 #from aiohttp import web
 from kubernetes import client, config, watch
 import json
-import pyyaml
+import yaml
 import os
 import sys
 import requests
@@ -46,8 +46,6 @@ def watchForChanges():
 
 
 def datasource(event):
-	print("---")
-	print("got a datasource")
 	metadata = event['object'].metadata
 	eventType = event['type']
 	dataMap=event['object'].data
@@ -55,18 +53,29 @@ def datasource(event):
 		print("---")
 		print("Configmap %s/%s datasource is %s, with no data" % (metadata.namespace, metadata.name, eventType))
 		return
+	print("---")
 	print("Configmap %s/%s datasource is %s" % (metadata.namespace, metadata.name, eventType))
 	for item in dataMap.keys():
 		print("---")
 		print("Found a datasource: %s" % item)
-		print(dataMap[item])
+		ds = yaml.safe_load(dataMap[item])
+		print("Posting json for datasource: %s ..." % ds["name"])
+		r = requests.Session()
+		retries = Retry(total = 5,
+			connect = 5,
+			backoff_factor = 0.2,
+			status_forcelist = [ 500, 502, 503, 504 ])
+		r.mount('http://', HTTPAdapter(max_retries=retries))
+		r.mount('https://', HTTPAdapter(max_retries=retries))
+		res = r.post(api+"/datasources", json=ds, timeout=10)
+		print("API result: %s" % res.status_code)
 
 def update(dashboard):
 	r = requests.Session()
 	retries = Retry(total = 5,
-			connect = 5,
-			backoff_factor = 0.2,
-			status_forcelist = [ 500, 502, 503, 504 ])
+		connect = 5,
+		backoff_factor = 0.2,
+		status_forcelist = [ 500, 502, 503, 504 ])
 	r.mount('http://', HTTPAdapter(max_retries=retries))
 	r.mount('https://', HTTPAdapter(max_retries=retries))
 
@@ -74,13 +83,10 @@ def update(dashboard):
 		dashboard = {"dashboard": dashboard, "overwrite": True}
 
 	dashboardTitle = dashboard["dashboard"]["title"]
-	print("Posting json for dashboard title: %s" % dashboardTitle)
+	print("Posting json for dashboard title: %s ..." % dashboardTitle)
 
-	res = r.post(url, json=dashboard, timeout=10)
+	res = r.post(api+"/dashboards/db", json=dashboard, timeout=10)
 	print("API result: %s" % res.status_code)
-#	result = res.json()
-#	print ("update result:")
-#	print (result)
 
 #app = web.Application()
 #app.router.add_get('/', handle)
@@ -105,8 +111,8 @@ with open('/etc/config/grafana-dashboard-gateway/namespace') as f:
 f.closed
 print ("namespace: %s" % namespace)
 
-url = "http://"+user+":"+pw+"@" + grafanaServiceName + "." + namespace + ".svc.cluster.local:3000/api/dashboards/db"
-print ("grafana api url: %s" % url)
+api = "http://"+user+":"+pw+"@" + grafanaServiceName + "." + namespace + ".svc.cluster.local:3000/api"
+print ("grafana api root: %s" % api)
 
 config.load_incluster_config()
 print("Config for cluster api loaded...")
