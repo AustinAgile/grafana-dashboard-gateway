@@ -1,0 +1,4 @@
+kubernetes==6.0.0
+aiohttp
+pydash
+pyyaml

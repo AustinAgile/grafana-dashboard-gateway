@@ -1,6 +1,7 @@
 #from aiohttp import web
 from kubernetes import client, config, watch
 import json
+import pyyaml
 import os
 import sys
 import requests
@@ -26,22 +27,39 @@ def watchForChanges():
 			continue
 		if annotation not in metadata.annotations:
 			continue
-		if metadata.annotations[annotation] != "dashboard":
-			continue
-
-		eventType = event['type']
-		dataMap=event['object'].data
-		if dataMap is None:
-			print("Configmap %s/%s dashboard is %s, with no data" % (metadata.namespace, metadata.name, eventType))
-			continue
-		print("Configmap %s/%s dashboard is %s" % (metadata.namespace, metadata.name, eventType))
-		for item in dataMap.keys():
+		if metadata.annotations[annotation] == "dashboard":
+			eventType = event['type']
+			dataMap=event['object'].data
+			if dataMap is None:
+				print("---")
+				print("Configmap %s/%s dashboard is %s, with no data" % (metadata.namespace, metadata.name, eventType))
+				continue
 			print("---")
-			print("Found a dashboard file: %s" % item)
-			dashboard = json.loads(dataMap[item])
-			update(dashboard)
-#		uid = search(dashboardTitle)
+			print("Configmap %s/%s dashboard is %s" % (metadata.namespace, metadata.name, eventType))
+			for item in dataMap.keys():
+				print("---")
+				print("Found a dashboard: %s" % item)
+				dashboard = json.loads(dataMap[item])
+				update(dashboard)
+		if metadata.annotations[annotation] == "datasource":
+			datasource(event)
 
+
+def datasource(event):
+	print("---")
+	print("got a datasource")
+	metadata = event['object'].metadata
+	eventType = event['type']
+	dataMap=event['object'].data
+	if dataMap is None:
+		print("---")
+		print("Configmap %s/%s datasource is %s, with no data" % (metadata.namespace, metadata.name, eventType))
+		return
+	print("Configmap %s/%s datasource is %s" % (metadata.namespace, metadata.name, eventType))
+	for item in dataMap.keys():
+		print("---")
+		print("Found a datasource: %s" % item)
+		print(dataMap[item])
 
 def update(dashboard):
 	r = requests.Session()

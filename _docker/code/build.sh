@@ -1,0 +1,1 @@
+docker build --no-cache --tag artifactory.mattersight.local:6002/grafana-dashboard-gateway:0.1.11 /development/github/kubernetes/grafana-dashboard-gateway/_docker
