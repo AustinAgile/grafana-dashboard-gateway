@@ -1,7 +1,6 @@
 #from aiohttp import web
 from kubernetes import client, config, watch
 import json
-import yaml
 import os
 import sys
 import requests
@@ -58,7 +57,7 @@ def datasource(event):
 	for item in dataMap.keys():
 		print("---")
 		print("Found a datasource: %s" % item)
-		ds = yaml.safe_load(dataMap[item])
+		ds = json.loads(dataMap[item])
 		print("Posting json for datasource: %s ..." % ds["name"])
 		r = requests.Session()
 		retries = Retry(total = 5,
