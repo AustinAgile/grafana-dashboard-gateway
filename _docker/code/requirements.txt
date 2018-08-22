@@ -1,4 +1,4 @@
-kubernetes==6.0.0
-aiohttp
-pydash
-pyyaml
+kubernetes==7.0.0 --index-url https://artifactory.mattersight.local/artifactory/api/pypi/pypi.local/simple --extra-index-url https://artifactory.mattersight.local/artifactory/api/pypi/external-pypi/simple --trusted-host artifactory.mattersight.local
+aiohttp --index-url https://artifactory.mattersight.local/artifactory/api/pypi/pypi.local/simple --extra-index-url https://artifactory.mattersight.local/artifactory/api/pypi/external-pypi/simple --trusted-host artifactory.mattersight.local
+pydash --index-url https://artifactory.mattersight.local/artifactory/api/pypi/pypi.local/simple --extra-index-url https://artifactory.mattersight.local/artifactory/api/pypi/external-pypi/simple --trusted-host artifactory.mattersight.local
+pyyaml --index-url https://artifactory.mattersight.local/artifactory/api/pypi/pypi.local/simple --extra-index-url https://artifactory.mattersight.local/artifactory/api/pypi/external-pypi/simple --trusted-host artifactory.mattersight.local

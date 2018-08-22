@@ -1,11 +1,11 @@
 global:
   namespace: monitoring
   ingress:
-    domain_name: kubernetes.local
+    domain_name: matrdevop.com
 
 image:
   repo:
-    artifacory.mattersight.local:6002
+    artifactory.mattersight.local:6002
 
 dev:
   code:

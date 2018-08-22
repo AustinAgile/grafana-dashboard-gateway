@@ -32,7 +32,7 @@ spec:
       serviceAccountName: {{ include "grafana-dashboard-gateway.name" . }}
       containers:
       - name: grafana-dashboard-gateway
-        image: {{ .Values.image.repo }}/grafana-dashboard-gateway:{{ .Chart.AppVersion }}
+        image: {{ .Values.image.repo }}/condel/grafana-dashboard-gateway:{{ .Chart.AppVersion }}
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5858
