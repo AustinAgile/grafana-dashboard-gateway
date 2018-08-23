@@ -56,6 +56,8 @@ spec:
       - name: secret
         secret:
           secretName: {{ include "grafana-dashboard-gateway.name" . }}
+      {{ if .Values.dev.code.mount }}
       - name: code
         hostPath:
           path: {{ .Values.dev.code.path }}
+      {{ end }}

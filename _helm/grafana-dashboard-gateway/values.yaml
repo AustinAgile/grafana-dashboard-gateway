@@ -9,5 +9,5 @@ image:
 
 dev:
   code:
-    mount: true
+    mount: false
     path: /development/github/kubernetes/grafana-dashboard-gateway/_docker/code
