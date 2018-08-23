@@ -3,6 +3,7 @@
 String cloud = "EKS"
 String buildNamespace = "jenkinsdevcondel"
 String appVersion = "0.1.${env.BUILD_NUMBER}"
+def args = [:]
 
 String label = "jenkins-${UUID.randomUUID().toString()}"
 podTemplate(cloud: "${cloud}", label: label, namespace: "${buildNamespace}",
