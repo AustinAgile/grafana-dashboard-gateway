@@ -81,6 +81,10 @@ def update(dashboard):
 	if "dashboard" not in dashboard:
 		dashboard = {"dashboard": dashboard, "overwrite": True}
 
+	newTitle = dashboard["dashboard"]["title"] + " (v" + str(dashboard["dashboard"]["version"]) + ")"
+	dashboard["dashboard"]["title"] = newTitle
+	print("Changing title to %s" % newTitle)
+
 	dashboardTitle = dashboard["dashboard"]["title"]
 	print("Posting json for dashboard title: %s ..." % dashboardTitle)
 
