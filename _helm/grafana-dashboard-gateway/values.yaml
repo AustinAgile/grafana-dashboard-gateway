@@ -2,6 +2,7 @@ global:
   namespace: monitoring
   ingress:
     domain_name: matrdevop.com
+    class: nginx
 
 image:
   repo:
