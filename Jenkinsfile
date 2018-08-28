@@ -2,7 +2,8 @@
 
 String cloud = "EKS"
 String buildNamespace = "jenkinsdevcondel"
-String appVersion = "0.1.${env.BUILD_NUMBER}"
+//String appVersion = "0.1.${env.BUILD_NUMBER}"
+String appVersion = "0.1.20"
 def args = [:]
 
 String label = "jenkins-${UUID.randomUUID().toString()}"
