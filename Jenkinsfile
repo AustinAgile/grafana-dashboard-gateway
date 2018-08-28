@@ -38,6 +38,15 @@ podTemplate(cloud: "${cloud}", label: label, namespace: "${buildNamespace}",
                     withEnv(["KUBECONFIG=${FILE}", "AWS_SHARED_CREDENTIALS_FILE=${FILE2}"]) {
                         sh "helm init --client-only"
                         sh "kubectl port-forward \$(kubectl get pods --namespace chartmuseum -l \"app=chartmuseum\" -l \"release=chartmuseum\" -o jsonpath=\"{.items[0].metadata.name}\") 8080:8080 --namespace chartmuseum &"
+
+                        def jenkinsHelmProperties = findFiles(glob:"*helm/jenkinsHelmProperties.yaml")
+                        def properties
+                        if(jenkinsHelmProperties.size() > 0) {
+                            properties = readYaml(file:jenkinsHelmProperties[0].path)
+                        } else {
+                            throw new Exception("jenkinsHelmProperties.yaml not found in the _helm or helm folder")
+                        }
+
                         def charts = findFiles(glob: "*helm/**/Chart.yaml")
                         if (charts.size() > 0) {
                             def chart = readYaml(file: charts[0].path)
