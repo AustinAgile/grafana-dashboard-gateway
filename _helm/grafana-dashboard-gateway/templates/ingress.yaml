@@ -6,6 +6,7 @@ metadata:
   annotations: {{ include "global.annotations.standard" . | indent 4 }}
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    kubernetes.io/ingress.class: "{{ .Values.global.ingress.class }}"
 spec:
   rules:
   - host: grafana-dashboard-gateway.{{ .Values.global.namespace }}
