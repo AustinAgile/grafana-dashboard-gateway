@@ -35,11 +35,18 @@ def watchForChanges():
 				continue
 			print("---")
 			print("Configmap %s/%s dashboard is %s" % (metadata.namespace, metadata.name, eventType))
+#			chartName = metadata.annotations["Chart.Name"]
+#			chartVersion = metadata.annotations["Chart.Name"]
+#			print(metadata)
+#			print(dataMap)
+#			for item in metadata.annotations.keys():
+#				print("annotation %s %s" % (item, metadata.annotations[item]))
+#			print("Chart name is %s" % chartName)
 			for item in dataMap.keys():
 				print("---")
 				print("Found a dashboard: %s" % item)
 				dashboard = json.loads(dataMap[item])
-				update(dashboard)
+				update(dashboard, metadata)
 		if metadata.annotations[annotation] == "datasource":
 			datasource(event)
 
@@ -69,7 +76,7 @@ def datasource(event):
 		res = r.post(api+"/datasources", json=ds, timeout=10)
 		print("API result: %s" % res.status_code)
 
-def update(dashboard):
+def update(dashboard, metadata):
 	r = requests.Session()
 	retries = Retry(total = 5,
 		connect = 5,
@@ -80,6 +87,16 @@ def update(dashboard):
 
 	if "dashboard" not in dashboard:
 		dashboard = {"dashboard": dashboard, "overwrite": True}
+
+	#
+	annotation = "grafana-dashboard-gateway/source"
+	for item in metadata.annotations.keys():
+		#Remove this item if currently present.
+		dashboard["dashboard"]["tags"] = pydash.collections.filter_(dashboard["dashboard"]["tags"], lambda x: item not in x)
+		if item == annotation: continue
+		if item == "Release.Heritage": continue
+		if item == "Release.Revision": continue
+		dashboard["dashboard"]["tags"] = pydash.arrays.push(dashboard["dashboard"]["tags"], item+":"+metadata.annotations[item])
 
 #	newTitle = dashboard["dashboard"]["title"] + " (v" + str(dashboard["dashboard"]["version"]) + ")"
 #	dashboard["dashboard"]["title"] = newTitle
